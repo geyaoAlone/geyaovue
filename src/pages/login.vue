@@ -1,52 +1,66 @@
-<script>
-  layui.use('form', function(){
-    var form = layui.form;
 
-    //监听提交
-    form.on('submit(formDemo)', function(data){
-      layer.msg(JSON.stringify(data.field));
-      return false;
-    });
-  });
-  export default {
-    name: "login"
-  }
-$(document).ready(function(){
-  $("#register").on("click",function(){
-    layer.msg('注册功能未开通');
-  })
+<script>
+layui.use('form', function () {
+  var form = layui.form
 })
+export default {
+  name: 'login',
+  data () {
+    return {
+      name: '',
+      password: ''
+    }
+  },
+  methods: {
+    login: function () {
+      if(!this.name){
+        layer.msg('请填登录名')
+        return;
+      }
+      if(!this.password){
+        layer.msg('请填密码')
+        return;
+      }
+      this.$post('find.do?name='+this.name+'&passwd='+this.password,'').then(res => {
+          console.log(res);
+      });
+      this.$router.push({path: '/firstPage'})
+    },
+    register:function(){
+      layer.msg('注册功能未开通')
+    }
+  }
+}
 
 </script>
 <template>
-  <div class="login">
-    <form class="layui-form" action="">
+  <div class="login layui-form">
       <div class="layui-form-item">
         <label class="layui-form-label">登录名：</label>
         <div class="layui-input-inline">
-          <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+          <input type="text" placeholder="请输入登录名" class="layui-input" v-model="name">
         </div>
         <div class="layui-form-mid layui-word-aux"></div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">密&emsp;码：</label>
         <div class="layui-input-inline">
-          <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+          <input type="password" class="layui-input" placeholder="请输入密码" v-model="password">
         </div>
         <div class="layui-form-mid layui-word-aux"></div>
       </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
-          <button class="layui-btn" lay-submit lay-filter="formDemo">登陆</button>
-          <button class="layui-btn layui-btn-primary" id="register">注册</button>
+          <button class="layui-btn" @click = login>登陆</button>
+          <button class="layui-btn layui-btn-primary" @click = register>注册</button>
         </div>
       </div>
-    </form>
   </div>
 </template>
 <style>
   body{
-    background: #9F9F9F;
+    background:url(../assets/bigbg.jpg) no-repeat;
+    background-size: 100%;
   }
   .login{
     background: #ffffff;
