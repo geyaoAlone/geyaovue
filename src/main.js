@@ -2,7 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import router from './router/index'
-
+import http from './comm/http'
+Vue.prototype.$http = http
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
