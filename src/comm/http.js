@@ -16,7 +16,7 @@ axios.interceptors.response.use(response => {
     return Promise.resolve(error.response)
 })
 
-const BASE_URL = 'http://10.10.10.53:8080/rxtFee/';
+const BASE_URL = 'http://localhost:9999/';
 
 function checkStatus (response) {
     // loading
