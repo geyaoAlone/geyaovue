@@ -21,8 +21,14 @@ export default {
         layer.msg('请填密码')
         return;
       }
+      /*
       this.$post('find.do?name='+this.name+'&passwd='+this.password,'').then(res => {
           console.log(res);
+      });
+      */
+      this.$http.get('find.do?name='+this.name+'&passwd='+this.password,'')
+      .then(result => {
+        console.log(result);
       });
       this.$router.push({path: '/firstPage'})
     },
