@@ -1,14 +1,13 @@
-
 <template>
   <div class="layui-layout layui-layout-admin">
     <div class="layui-header layui-bg-green">
       <div class="layui-logo">葛耀-牛逼的网站</div>
       <!-- 头部区域（可配合layui已有的水平导航） -->
       <ul class="layui-nav layui-bg-green layui-layout-left">
-        <li class="layui-nav-item layui-this">
+        <li class="layui-nav-item ">
           <a href="javascript:;" @click="firstPage()">首页</a>
         </li>
-        <li class="layui-nav-item">
+        <li class="layui-nav-item layui-this">
           <a href="javascript:;" @click="openTimeline()">我的时间线</a>
         </li>
       </ul>
@@ -18,28 +17,28 @@
     </div>
 
     <div class="layui-body">
-        <blockquote class="layui-elem-quote">
-          2018年07月24日 葛耀的网站正式上线了！
-        </blockquote>
-        <div class="content">
-          <div class="left-content">
-            <h1>这里是首页的主体</h1>
-            <h2>这里是首页的主体</h2>
-            <h3>这里是首页的主体</h3>
-            <h4>这里是首页的主体</h4>
-          </div>
-          <div class="right-content">
-            <fieldset class="layui-elem-field site-demo-button">
-              <legend>所在公司友情连接</legend>
-              <div style="padding:20px">
-                <a href="https://www.rongxintong.com" class="layui-btn" target="_blank">融信通金服科技股份有限公司</a>
-                <a href="http://jiaofei.rongxintong.com" class="layui-btn" target="_blank">云缴费</a>
+      <div class="content">
+        <div class="left-content">
+          <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>常规时间线</legend>
+          </fieldset>
+          <ul class="layui-timeline" v-for="(item ,i) in itemList" :key="i">
+            <li class="layui-timeline-item">
+              <i class="layui-icon layui-timeline-axis"></i>
+              <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title" >{{item.time}}</h3>
+                <p>{{item.title}}<br/>
+                  {{item.content}}
+                </p>
               </div>
-            </fieldset>
-          </div>
+            </li>
+          </ul>
         </div>
-    </div>
+        <div class="right-content">
 
+        </div>
+      </div>
+    </div>
     <div class="layui-footer" style="left:0px;">
       <!-- 底部固定区域 -->
       © geyao
@@ -49,10 +48,10 @@
 
 <script>
 export default {
-  name: '我的首页',
+  name: '我的时间',
   data () {
     return {
-
+      itemList: []
     }
   },
   // 这里写方法比如给元素绑定事件等等
@@ -66,14 +65,20 @@ export default {
 
   },
   created () {
+    // this.data = this.$store.state.session;
+    // 证件类型（10:身份证 11:护照 12:军人证 13:港澳台通行证 20:其他）
+    // var params = {"orgId":this.data.orgId,"name":this.data.name,"idcardno":this.data.idcardno};
+    this.$http.post('/findAllTimeline.do', {}
+    ).then(result => {
+      console.info(typeof result);
+      this.itemList = result
+    })
 
   }
+
 }
-$(document).ready(function () {
-  // $('.left-content').width($('.content').width() * 0.7).height($(window).height() - 173)
-  // $('.right-content').width($('.content').width() * 0.29).height($(window).height() - 173)
-})
 </script>
+
 <style>
   .layui-logo{
     color:#fff!important;

@@ -41,6 +41,7 @@ export default {
 </script>
 <template>
   <div class="login layui-form">
+    <h2>登陆框</h2>
       <div class="layui-form-item">
         <label class="layui-form-label">登录名：</label>
         <div class="layui-input-inline">
@@ -73,12 +74,12 @@ export default {
     position: fixed;
     top:50%;
     left:50%;
-    margin-top: -200px;
-    margin-left: -250px;
-    padding-left:50px;
-    padding-top:80px;
-    height: 300px;
-    width: 400px;
+    margin-top: -160px;
+    margin-left: -190px;
+    padding-left:5px;
+    padding-top:50px;
+    height: 240px;
+    width: 340px;
     box-shadow: 0 0px 20px rgba(0,0,0,0.6);
   }
 </style>
