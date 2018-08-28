@@ -16,8 +16,12 @@
 
   // 屏幕宽度/数值=结果
   html.style.fontSize = pageWidth/15 + "px";
+  var layer;
+  layui.use('layer', function(){
+    layer = layui.layer;
 
 
+  });
 </script>
 
 <style>

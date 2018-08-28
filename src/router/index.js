@@ -21,5 +21,6 @@ const routes = [
   }
 ]
 export default new Router({
+  base: '/pro/',
   routes
 })

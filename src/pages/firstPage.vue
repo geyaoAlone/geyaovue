@@ -13,7 +13,7 @@
         </li>
       </ul>
       <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item"><a href="">登录</a></li>
+        <li class="layui-nav-item"><a href="javascript:;" @click="login()">登录</a></li>
       </ul>
     </div>
 
@@ -57,6 +57,48 @@ export default {
   },
   // 这里写方法比如给元素绑定事件等等
   methods: {
+    login: function () {
+      let _this = this;
+      layer.open({
+        type: 1,
+        title: '登陆页',
+        skin: 'layui-layer-rim',
+        area: ['350px', '300px'],
+        content: '<div class="login layui-form">' +
+        '       <h2>管理员登陆</h2>' +
+        '      <div class="layui-form-item">' +
+        '        <label class="layui-form-label">登录名：</label>' +
+        '        <div class="layui-input-inline">' +
+        '          <input type="text" placeholder="请输入登录名" class="layui-input" id="name">' +
+        '        </div>' +
+        '        <div class="layui-form-mid layui-word-aux"></div>' +
+        '      </div>' +
+        '      <div class="layui-form-item">' +
+        '        <label class="layui-form-label">密&emsp;码：</label>' +
+        '        <div class="layui-input-inline">' +
+        '          <input type="password" class="layui-input" placeholder="请输入密码" id="password">' +
+        '        </div>' +
+        '        <div class="layui-form-mid layui-word-aux"></div>' +
+        '      </div>' +
+        '  </div>',
+        btn: ['登陆'],
+        yes: function (index, layero) {
+          var params = {name: $('#name').val(), passwd: $('#password').val()}
+          if (!params.name || !params.passwd) {
+            layer.msg('参数为空！')
+            return
+          }
+          _this.$http.post('/checkLogin.do', params
+          ).then(result => {
+            if(result ==='1'){
+              layer.msg('登陆成功！')
+            }else{
+              layer.msg('登陆失败！')
+            }
+          })
+        }
+      })
+    },
     openTimeline () {
       this.$router.push({path: 'timeline'})
     },
@@ -102,5 +144,10 @@ $(document).ready(function () {
     padding: 5px;
     width: 29%;
     height: 100%;
+  }
+  .login h2{
+    margin-top: 30px;
+    margin-bottom: 15px;
+    text-align: center;
   }
 </style>
