@@ -30,7 +30,7 @@
     height: 100%;
     margin:0;
     padding:0;
-    /*background: #f0f0f0;*/
+    background: #F2F2F2;
     /*overflow: hidden;*/
   }
   #app {

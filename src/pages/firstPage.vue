@@ -2,8 +2,8 @@
 <template>
   <div class="layui-layout layui-layout-admin">
     <div class="layui-header layui-bg-green">
-      <div class="layui-logo">葛耀-牛逼的网站</div>
-      <!-- 头部区域（可配合layui已有的水平导航） -->
+      <div class="layui-logo">给要的博客</div>
+      <!-- 头部区域（可配合layui已有的水平导航）
       <ul class="layui-nav layui-bg-green layui-layout-left">
         <li class="layui-nav-item layui-this">
           <a href="javascript:;" @click="firstPage()">首页</a>
@@ -12,6 +12,7 @@
           <a href="javascript:;" @click="openTimeline()">我的时间线</a>
         </li>
       </ul>
+      -->
       <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item"><a href="javascript:;" @click="login()">登录</a></li>
       </ul>
@@ -23,14 +24,24 @@
         </blockquote>
         <div class="content">
           <div class="left-content">
-            <h1>这里是首页的主体</h1>
-            <h2>这里是首页的主体</h2>
-            <h3>这里是首页的主体</h3>
-            <h4>这里是首页的主体</h4>
+            <div class="time-line">
+              <ul class="layui-timeline" v-for="(item ,i) in itemList" :key="i">
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis"></i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title" >{{item.title}}</h3>
+                    <p>☞&ensp;{{item.time}}<br/>
+                      ☞&ensp;{{item.author}}<br/>
+                      <span class="timeline_content">{{item.content}}</span>
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="right-content">
             <fieldset class="layui-elem-field site-demo-button">
-              <legend>所在公司友情连接</legend>
+              <legend>所在公司友情连接{{height}}</legend>
               <div style="padding:20px">
                 <a href="https://www.rongxintong.com" class="layui-btn" target="_blank">融信通金服科技股份有限公司</a>
                 <a href="http://jiaofei.rongxintong.com" class="layui-btn" target="_blank">云缴费</a>
@@ -50,15 +61,16 @@
 <script>
 export default {
   name: '我的首页',
-  data () {
+  data: function () {
     return {
-
+      height: $('.left-content').height(),
+      itemList: []
     }
   },
   // 这里写方法比如给元素绑定事件等等
   methods: {
     login: function () {
-      let _this = this;
+      let _this = this
       layer.open({
         type: 1,
         title: '登陆页',
@@ -90,9 +102,12 @@ export default {
           }
           _this.$http.post('/checkLogin.do', params
           ).then(result => {
-            if(result ==='1'){
-              layer.msg('登陆成功！')
-            }else{
+            if (result === '1') {
+              layer.msg('登陆成功！',{time: 1500},function () {
+                layer.close(index)
+                _this.$router.push({path: 'timeline',query:{name:params.name}})
+              })
+            } else {
               layer.msg('登陆失败！')
             }
           })
@@ -107,16 +122,22 @@ export default {
     }
 
   },
-  created () {
-
+  created: function () {
+    this.$http.post('/findAllTimeline.do', {}
+    ).then(result => {
+      console.info(typeof result)
+      this.itemList = result.dataList
+    })
   }
 }
 $(document).ready(function () {
-  // $('.left-content').width($('.content').width() * 0.7).height($(window).height() - 173)
-  // $('.right-content').width($('.content').width() * 0.29).height($(window).height() - 173)
+  $('.left-content').css('min-height', $(window).height())
 })
 </script>
 <style>
+  .layui-elem-quote{
+    background-color: #ffffff;
+  }
   .layui-logo{
     color:#fff!important;
   }
@@ -129,13 +150,12 @@ $(document).ready(function () {
   .content{
     margin-left:10px;
     margin-right: 10px;
-    height: 100%;
+    /*height: 100%;*/
   }
   .left-content{
     display: inline-block;
     background: #FBFBFB;
     width: 70%;
-    height: 100%;
   }
   .right-content{
     display: inline-block;
@@ -143,11 +163,17 @@ $(document).ready(function () {
     float: right;
     padding: 5px;
     width: 29%;
-    height: 100%;
   }
   .login h2{
     margin-top: 30px;
     margin-bottom: 15px;
     text-align: center;
+  }
+  .time-line{
+    margin: 34px;
+  }
+  .timeline_content{
+    font-size: 15px;
+    color: #000000;
   }
 </style>
