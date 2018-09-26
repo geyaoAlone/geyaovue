@@ -6,7 +6,8 @@ import router from './router/index'
 // vuex.store 这个不用管，是组件之间数据共享的插件
 import store from './store'
 import http from './utils/http'
-
+import Es6Promise from 'es6-promise'
+Es6Promise.polyfill()
 /* eslint-disable no-new */
 
 Vue.prototype.$http = http;

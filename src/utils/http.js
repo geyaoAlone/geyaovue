@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import { Indicator } from 'mint-ui'
-const BASE_URL = 'http://39.108.221.60:9999/' // 'http://10.10.10.33:9999'
+const BASE_URL = 'http://120.79.240.9:9999/'// 'http://localhost:9999'
 
 axios.interceptors.request.use(config => {
   // loading opend

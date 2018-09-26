@@ -6,22 +6,20 @@
 </template>
 
 <script>
-  export default {
-    name: 'App'
-  }
+export default {
+  name: 'App'
+}
 
-  // 获取html节点和宽度
-  var html= document.getElementsByTagName("html")[0],
-    pageWidth = html.getBoundingClientRect().width;
+// 获取html节点和宽度
+var html = document.getElementsByTagName('html')[0],
+  pageWidth = html.getBoundingClientRect().width
 
   // 屏幕宽度/数值=结果
-  html.style.fontSize = pageWidth/15 + "px";
-  var layer;
-  layui.use('layer', function(){
-    layer = layui.layer;
-
-
-  });
+html.style.fontSize = pageWidth / 15 + 'px'
+var layer
+layui.use('layer', function () {
+  layer = layui.layer
+})
 </script>
 
 <style>
@@ -68,6 +66,5 @@
     cursor: pointer;
     color: #000;
   }
-
 
 </style>

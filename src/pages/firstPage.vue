@@ -1,18 +1,10 @@
 
 <template>
+
   <div class="layui-layout layui-layout-admin">
+
     <div class="layui-header layui-bg-green">
-      <div class="layui-logo">给要的博客</div>
-      <!-- 头部区域（可配合layui已有的水平导航）
-      <ul class="layui-nav layui-bg-green layui-layout-left">
-        <li class="layui-nav-item layui-this">
-          <a href="javascript:;" @click="firstPage()">首页</a>
-        </li>
-        <li class="layui-nav-item">
-          <a href="javascript:;" @click="openTimeline()">我的时间线</a>
-        </li>
-      </ul>
-      -->
+      <div class="layui-logo">葛耀的小站</div>
       <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item"><a href="javascript:;" @click="login()">登录</a></li>
       </ul>
@@ -24,29 +16,56 @@
         </blockquote>
         <div class="content">
           <div class="left-content">
+              <div class="layui-row layui-col-space15" v-for="(item ,i) in itemList" :key="i">
+                <div class="layui-col-md12">
+                  <div class="layui-card">
+                    <div class="layui-card-header">
+                      <span @click="articleDetail(item.blogid)">{{item.title}}</span>
+                      <div class="second">☞&nbsp;{{item.author}}&emsp;&emsp;&emsp;&emsp;☞&nbsp;{{item.time}}</div>
+                    </div>
+                    <div class="layui-card-body">
+                      <span class="timeline_content" v-html="item.content"></span>
+                      <a class="go_ready" @click="articleDetail(item.blogid)">阅读全文»</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <!--
             <div class="time-line">
               <ul class="layui-timeline" v-for="(item ,i) in itemList" :key="i">
                 <li class="layui-timeline-item">
                   <i class="layui-icon layui-timeline-axis"></i>
                   <div class="layui-timeline-content layui-text">
                     <h3 class="layui-timeline-title" >{{item.title}}</h3>
-                    <p>☞&ensp;{{item.time}}<br/>
-                      ☞&ensp;{{item.author}}<br/>
-                      <span class="timeline_content">{{item.content}}</span>
+                    <p>☃&nbsp;{{item.author}}&emsp;&emsp;&emsp;&emsp;
+                      ۩&nbsp;{{item.time}}<br/>
+                      <span class="timeline_content" v-html="item.content"></span>
                     </p>
                   </div>
                 </li>
               </ul>
             </div>
+            -->
           </div>
           <div class="right-content">
+            <div class="small_chunk">
             <fieldset class="layui-elem-field site-demo-button">
-              <legend>所在公司友情连接{{height}}</legend>
+              <legend>网站信息</legend>
+              <div style="padding:20px">
+                <a href="#" class="layui-btn" @click="queryWebsiteUpdateInfo()">更新日志</a>
+              </div>
+            </fieldset>
+            </div>
+            <div class="small_chunk">
+            <fieldset class="layui-elem-field site-demo-button">
+              <legend>所在公司友情连接</legend>
               <div style="padding:20px">
                 <a href="https://www.rongxintong.com" class="layui-btn" target="_blank">融信通金服科技股份有限公司</a>
                 <a href="http://jiaofei.rongxintong.com" class="layui-btn" target="_blank">云缴费</a>
               </div>
             </fieldset>
+            </div>
           </div>
         </div>
     </div>
@@ -71,17 +90,17 @@ export default {
   methods: {
     login: function () {
       let _this = this
-      layer.open({
+      var index = layer.open({
         type: 1,
         title: '登陆页',
         skin: 'layui-layer-rim',
         area: ['350px', '300px'],
-        content: '<div class="login layui-form">' +
+        content: '<div class="login layui-form" onkeydown="keyLogin();">' +
         '       <h2>管理员登陆</h2>' +
         '      <div class="layui-form-item">' +
         '        <label class="layui-form-label">登录名：</label>' +
         '        <div class="layui-input-inline">' +
-        '          <input type="text" placeholder="请输入登录名" class="layui-input" id="name">' +
+        '          <input type="text" placeholder="请输入登录名" class="layui-input" id="usename">' +
         '        </div>' +
         '        <div class="layui-form-mid layui-word-aux"></div>' +
         '      </div>' +
@@ -95,35 +114,40 @@ export default {
         '  </div>',
         btn: ['登陆'],
         yes: function (index, layero) {
-          var params = {name: $('#name').val(), passwd: $('#password').val()}
-          if (!params.name || !params.passwd) {
-            layer.msg('参数为空！')
-            return
-          }
-          _this.$http.post('/checkLogin.do', params
-          ).then(result => {
-            if (result === '1') {
-              layer.msg('登陆成功！',{time: 1500},function () {
-                layer.close(index)
-                _this.$router.push({path: 'timeline',query:{name:params.name}})
-              })
-            } else {
-              layer.msg('登陆失败！')
-            }
-          })
+          _this.$options.methods.goLogin(_this, index)
         }
       })
     },
-    openTimeline () {
-      this.$router.push({path: 'timeline'})
+    goLogin (_this, index) {
+      var params = {usename: $('#usename').val(), passwd: $('#password').val()}
+      if (!params.usename || !params.passwd) {
+        layer.msg('参数为空！')
+        return
+      }
+      _this.$http.post('/checkLogin.do', params
+      ).then(result => {
+        if (result === '1') {
+          layer.msg('登陆成功！', {time: 1500}, function () {
+            layer.close(index)
+            _this.$router.push({path: 'myBlogs', query: {usename: params.usename}})
+          })
+        } else {
+          layer.msg('登陆失败！')
+        }
+      })
     },
     firstPage () {
       this.$router.push({path: 'firstPage'})
+    },
+    articleDetail (blogid) {
+      this.$router.push({path: 'articleDetail', query: {blogid:blogid}})
+    },
+    queryWebsiteUpdateInfo () {
+      this.$router.push({path: 'websiteUpdateinfo'})
     }
-
   },
   created: function () {
-    this.$http.post('/findAllTimeline.do', {}
+    this.$http.post('/findAllBlogs.do', {}
     ).then(result => {
       console.info(typeof result)
       this.itemList = result.dataList
@@ -143,6 +167,7 @@ $(document).ready(function () {
   }
   .layui-body{
     left: 0px;
+    background-image:url(../../static/bg.jpg)!important;
   }
   .layui-elem-quote{
     margin-top: 7px;
@@ -154,12 +179,10 @@ $(document).ready(function () {
   }
   .left-content{
     display: inline-block;
-    background: #FBFBFB;
     width: 70%;
   }
   .right-content{
     display: inline-block;
-    background: #FBFBFB;
     float: right;
     padding: 5px;
     width: 29%;
@@ -175,5 +198,33 @@ $(document).ready(function () {
   .timeline_content{
     font-size: 15px;
     color: #000000;
+    display: -webkit-box;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+  }
+  .layui-card-header{
+    padding-top: 5px;
+    height:65px;
+    font-size: 20px;
+  }
+  .second{
+    font-size: 14px;
+    font-weight: 100;
+    margin-top: -15px;
+  }
+  .go_ready{
+    color: #ea3f40;
+    width: 100%;
+    text-align: right;
+    display: block;
+    line-height: 40px;
+  }
+  .small_chunk{
+    background: #ffffff;
+    padding: 10px;
+    margin-bottom: 20px;
   }
 </style>
