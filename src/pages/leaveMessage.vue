@@ -1,24 +1,6 @@
 <template>
-  <!--
-  <div class="layui-layout layui-layout-admin">
-    <div class="layui-header layui-bg-green">
-      <div class="layui-logo" @click="firstPage()">«返回首页</div>
-    </div>
-    <div class="layui-body">
-      <blockquote class="layui-elem-quote">
-        2018年07月24日 葛耀的网站正式上线了！
-      </blockquote>
-      <div class="content_center white_bg">
-          <div class="detail_title">{{detailInfo.title}}</div>
-          <div v-html="detailInfo.content"></div>
-      </div>
-    </div>
-    <div class="layui-footer" style="left:0px;">
-      © geyao
-    </div>
-  </div>
-  -->
-  <div class="lay-blog">
+
+  <div  class="lay-blog">
     <div class="header">
       <div class="header-wrap">
         <h1 class="logo pull-left">
@@ -28,8 +10,8 @@
         </h1>
         <div class="blog-nav pull-right">
           <ul class="layui-nav pull-left">
-            <li class="layui-nav-item layui-this"><a href="javascript:;" @click="firstPage()">首页</a></li>
-            <li class="layui-nav-item"><a href="javascript:;" @click="goMessage()">留言</a></li>
+            <li class="layui-nav-item "><a href="javascript:;" @click="firstPage()">首页</a></li>
+            <li class="layui-nav-item layui-this"><a href="javascript:;" @click="goMessage()">留言</a></li>
             <li class="layui-nav-item"><a href="javascript:;" @click="queryWebsiteUpdateInfo()">关于小站</a></li>
           </ul>
           <a href="javascript:;" class="personal pull-left" @click="login()">
@@ -42,35 +24,27 @@
           </a>
         </div>
       </div>
-      <ul class="pop-nav" id="pop-nav">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="message.html">留言</a></li>
-        <li><a href="about.html">关于</a></li>
-      </ul>
     </div>
+
     <div class="container-wrap">
-      <div class="container container-message container-details">
-        <div class="contar-wrap">
-          <div class="item">
-            <div class="item-box  layer-photos-demo1 layer-photos-demo">
-              <h3><a href="details.html">{{detailInfo.title}}</a></h3>
-              <h5>{{detailInfo.author}}&emsp;发布于：<span>{{detailInfo.time}}</span></h5>
-              <p v-html="detailInfo.content"></p>
-              <!--<img src="../res/static/images/item.png" alt="">
-              <div class="count layui-clear">
-                <span class="pull-left">阅读 <em>100000+</em></span>
-                <span class="pull-right like"><i class="layui-icon layui-icon-praise"></i><em>999</em></span>
+      <div class="container container-message content-width">
+        <div class="contar-wrap" id="contar-wrap">
+          <form class="layui-form" action="">
+            <div class="layui-form-item layui-form-text input_bg">
+              <input placeholder="请留下昵称" class="msg_input" v-model="message.author"/><font color="red">*</font>
+              <textarea  placeholder="请留下想说的话"  class="layui-textarea" id="LAY-msg-content" style="resize:none" v-model="message.content"></textarea>
+              <div class="item-btn">
+                <button class="layui-btn layui-btn-normal" id="item-btn" @click="saveMessage()">提交</button>
               </div>
-              -->
             </div>
-          </div>
+          </form>
+
           <div id="LAY-msg-box" class="msg_content">
-            <button class="layui-btn layui-btn-sm layui-btn-normal" @click="writeComment(detailInfo.blogid)"><i class="layui-icon">&#xe642;</i> 写评论</button>
             <fieldset class="layui-elem-field layui-field-title liu_yan">
-              <legend>评论区</legend>
+              <legend>留言区</legend>
             </fieldset>
             <div class="info-box msg_box">
-              <div class="info-item msg_box_one" v-for="(item ,i) in comments" :key="i">
+              <div class="info-item msg_box_one" v-for="(item ,i) in itemList" :key="i">
                 <img class="info-img" src="../../static/info-img.png" alt="">
                 <div class="info-text msg_box_two">
                   <p class="title count">
@@ -83,9 +57,12 @@
               </div>
             </div>
           </div>
+
+          <div id="test1" class="paging"></div>
         </div>
       </div>
     </div>
+
     <div class="footer">
       <p>
         <span>&copy; 2018</span>
@@ -95,17 +72,19 @@
       <p><span>孤独是一场修行</span></p>
     </div>
   </div>
+
 </template>
 
 <script>
 export default {
-  name: '详情页',
+  name: 'leave-message',
   data: function () {
     return {
-      detailInfo: {},
-      comments: []
+      itemList: [],
+      message: {'author': '', 'content': '', 'type': '1'}
     }
   },
+  // 这里写方法比如给元素绑定事件等等
   methods: {
     login: function () {
       let _this = this
@@ -155,75 +134,52 @@ export default {
         }
       })
     },
+    firstPage () {
+      this.$router.push({path: 'firstPage'})
+    },
     queryWebsiteUpdateInfo () {
       this.$router.push({path: 'websiteUpdateinfo'})
     },
     goMessage () {
       this.$router.push({path: 'leaveMessage'})
     },
-    firstPage () {
-      this.$router.push({path: 'firstPage'})
-    },
-    writeComment (blogid) {
+    saveMessage () {
+      console.info(this)
       let _this = this
-      var index = layer.open({
-        type: 1,
-        title: '',
-        skin: 'layui-layer-rim',
-        area: ['400px', '250px'],
-        content: '<div class="msg_div"><h4>*有什么想说的写在这吧</h4>' +
-        '         <input placeholder="请留下昵称" class="msg_input" id="author"/><font color="red">*</font>' +
-        '         <textarea  placeholder="请留下想说的话"  class="layui-textarea" id="LAY-msg-content" style="resize:none"></textarea>' +
-        '       </div>',
-        btn: ['提交'],
-        yes: function (index, layero) {
-          _this.$options.methods.saveliuyan(_this, index, blogid)
+      if (!_this.message.content) {
+        layer.msg('请写一个您的昵称，随便都行')
+        return
+      }
+      if (!_this.message.content) {
+        layer.msg('请留下想说的话')
+        return
+      }
+      _this.$http.post('/saveComments.do', _this.message
+      ).then(result => {
+        console.info(typeof result)
+        if (result === '1') {
+          layer.msg('谢谢留言', {time: 1000}, function () {
+            _this.$http.post('/queryComments.do', {type: 1}
+            ).then(result => {
+              console.info(result)
+              _this.itemList = result
+            })
+          })
         }
       })
-    },
-    saveliuyan (_this, index, blogid) {
-      var params = {blogid: blogid, author: $('#author').val(), content: $('#LAY-msg-content').val(), type: 2}
-      if (!params.author) {
-        params.author = '匿名'
-      }
-      if (!params.content) {
-        layer.msg('您未留下任何想说的话', {time: 1000}, function () {
-          layer.closeAll()
-        })
-      } else {
-        _this.$http.post('/saveComments.do', params
-        ).then(result => {
-          console.info(result)
-          if (result == '1') {
-            layer.msg('评论成功', {time: 1000}, function () {
-              layer.closeAll()
-              _this.$http.post('/queryComments.do', {blogid: blogid}
-              ).then(result => {
-                console.info(result)
-                _this.comments = result
-              })
-            })
-          }
-        })
-      }
     }
-
   },
   created: function () {
-    this.$http.post('/findBlogsById.do', {blogid: this.$route.query.blogid}
+    this.$http.post('/queryComments.do', {type: 1}
     ).then(result => {
       console.info(result)
-      this.detailInfo = result.blog
-      this.comments = result.comments
+      this.itemList = result
     })
   }
 }
 </script>
 
-<style >
-  .msg_div{
-    margin: 20px;
-  }
+<style scoped>
   .msg_input{
     height: 30px;
     margin-bottom: 10px;
@@ -234,13 +190,28 @@ export default {
     border-radius: 2px;
     padding-left: 10px;
   }
+  .content-width{
+    width: 750px;
+  }
+  .input_bg{
+    background: #ffffff;
+  }
+  .input_bg input{
+    margin-left: 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  .input_bg textarea{
+    width: 720px;
+    margin: 0 auto;
+  }
+  .input_bg .item-btn button{
+    margin-right: 15px;
+    margin-bottom: 20px;
+  }
   .msg_content{
     background: #ffffff;
     width: 750px;
-  }
-  .msg_content button{
-    margin: 10px 15px 0px 0px;
-    float: right;
   }
   .msg_box{
     width: 720px;
@@ -263,7 +234,7 @@ export default {
   .liu_yan{
     width: 720px;
     margin: 0 auto;
-    line-height: 50px;
+    line-height: 70px;
     text-align: center;
     font-size: 20px;
     margin-bottom: -20px;
@@ -274,5 +245,4 @@ export default {
     line-height: 38px;
     color: #787878;
   }
-
 </style>

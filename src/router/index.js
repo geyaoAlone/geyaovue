@@ -5,6 +5,7 @@ import MyBlogs from '../pages/myBlogs'
 import ArticleDetail from '../pages/articleDetail'
 import WebsiteUpdateinfo from '../pages/websiteUpdateinfo'
 import EditBlog from '../pages/editBlog'
+import LeaveMessage from '../pages/leaveMessage'
 Vue.use(Router)
 
 const routes = [
@@ -29,6 +30,10 @@ const routes = [
     name: 'edit-blog',
     path: '/editBlog',
     component: EditBlog
+  }, {
+    name: 'leave-Message',
+    path: '/leaveMessage',
+    component: LeaveMessage
   }
 ]
 export default new Router({

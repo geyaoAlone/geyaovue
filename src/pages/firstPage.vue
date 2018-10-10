@@ -1,79 +1,67 @@
 
 <template>
-
-  <div class="layui-layout layui-layout-admin">
-
-    <div class="layui-header layui-bg-green">
-      <div class="layui-logo">葛耀的小站</div>
-      <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item"><a href="javascript:;" @click="login()">登录</a></li>
-      </ul>
+  <div class="lay-blog">
+  <div class="header">
+    <div class="header-wrap">
+      <h1 class="logo pull-left">
+        <a href="javascript:;" @click="firstPage()">
+          <img src="../../static/geyao_logoNew1.png" alt="" class="logo-img">
+        </a>
+      </h1>
+      <div class="blog-nav pull-right">
+        <ul class="layui-nav pull-left">
+          <li class="layui-nav-item layui-this"><a href="javascript:;" @click="firstPage()">首页</a></li>
+          <li class="layui-nav-item"><a href="javascript:;" @click="goMessage()">留言</a></li>
+          <li class="layui-nav-item"><a href="javascript:;" @click="queryWebsiteUpdateInfo()">关于小站</a></li>
+        </ul>
+        <a href="javascript:;" class="personal pull-left" @click="login()">
+          <i class="layui-icon layui-icon-username"></i>
+        </a>
+      </div>
+      <div class="mobile-nav pull-right" id="mobile-nav">
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more"></i>
+        </a>
+      </div>
     </div>
-
-    <div class="layui-body">
-        <blockquote class="layui-elem-quote">
-          2018年07月24日 葛耀的网站正式上线了！
-        </blockquote>
-        <div class="content">
-          <div class="left-content">
-              <div class="layui-row layui-col-space15" v-for="(item ,i) in itemList" :key="i">
-                <div class="layui-col-md12">
-                  <div class="layui-card">
-                    <div class="layui-card-header">
-                      <span @click="articleDetail(item.blogid)">{{item.title}}</span>
-                      <div class="second">☞&nbsp;{{item.author}}&emsp;&emsp;&emsp;&emsp;☞&nbsp;{{item.time}}</div>
-                    </div>
-                    <div class="layui-card-body">
-                      <span class="timeline_content" v-html="item.content"></span>
-                      <a class="go_ready" @click="articleDetail(item.blogid)">阅读全文»</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            <!--
-            <div class="time-line">
-              <ul class="layui-timeline" v-for="(item ,i) in itemList" :key="i">
-                <li class="layui-timeline-item">
-                  <i class="layui-icon layui-timeline-axis"></i>
-                  <div class="layui-timeline-content layui-text">
-                    <h3 class="layui-timeline-title" >{{item.title}}</h3>
-                    <p>☃&nbsp;{{item.author}}&emsp;&emsp;&emsp;&emsp;
-                      ۩&nbsp;{{item.time}}<br/>
-                      <span class="timeline_content" v-html="item.content"></span>
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            -->
+    <ul class="pop-nav" id="pop-nav">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="message.html">留言</a></li>
+      <li><a href="about.html">关于</a></li>
+    </ul>
+  </div>
+  <div class="container-wrap">
+    <div class="container">
+      <div class="contar-wrap">
+        <h4 class="item-title">
+          <p><i class="layui-icon layui-icon-speaker"></i>公告：<span>欢迎来到葛耀的小站</span></p>
+        </h4>
+        <div class="item" v-for="(item ,i) in itemList" :key="i">
+          <div class="item-box  layer-photos-demo1 layer-photos-demo">
+            <h3><a href="javascript:;" @click="articleDetail(item.blogid)">{{item.title}}</a></h3>
+            <h5>{{item.author}}&emsp;发布于：<span>{{item.time}}</span></h5>
+            <p class="timeline_content" v-html="item.content"></p>
+            <!--<img src="../res/static/images/item.png" alt="">-->
+            <a style="float: right;color: #ea3f40" @click="articleDetail(item.blogid)">阅读全文➠</a>
           </div>
-          <div class="right-content">
-            <div class="small_chunk">
-            <fieldset class="layui-elem-field site-demo-button">
-              <legend>网站信息</legend>
-              <div style="padding:20px">
-                <a href="#" class="layui-btn" @click="queryWebsiteUpdateInfo()">更新日志</a>
-              </div>
-            </fieldset>
-            </div>
-            <div class="small_chunk">
-            <fieldset class="layui-elem-field site-demo-button">
-              <legend>所在公司友情连接</legend>
-              <div style="padding:20px">
-                <a href="https://www.rongxintong.com" class="layui-btn" target="_blank">融信通金服科技股份有限公司</a>
-                <a href="http://jiaofei.rongxintong.com" class="layui-btn" target="_blank">云缴费</a>
-              </div>
-            </fieldset>
-            </div>
+          <!--
+          <div class="comment count">
+            <a href="javascript:;" @click="articleDetail(item.blogid)">评论</a>
+            <a href="javascript:;" class="like" blogid="item.blogid">点赞</a>
           </div>
+          -->
         </div>
+      </div>
     </div>
-
-    <div class="layui-footer" style="left:0px;">
-      <!-- 底部固定区域 -->
-      © geyao
-    </div>
+  </div>
+  <div class="footer">
+    <p>
+      <span>&copy; 2018</span>
+      <span><a href="http://www.geyaoln.xin" target="_blank">geyaoln.xin</a></span>
+      <span>3Q 老丁&emsp;&emsp;京ICP备18050188号-1</span>
+    </p>
+    <p><span>孤独是一场修行</span></p>
+  </div>
   </div>
 </template>
 
@@ -82,7 +70,6 @@ export default {
   name: '我的首页',
   data: function () {
     return {
-      height: $('.left-content').height(),
       itemList: []
     }
   },
@@ -92,12 +79,12 @@ export default {
       let _this = this
       var index = layer.open({
         type: 1,
-        title: '登陆页',
+        title: '',
         skin: 'layui-layer-rim',
         area: ['350px', '300px'],
         content: '<div class="login layui-form" onkeydown="keyLogin();">' +
-        '       <h2>管理员登陆</h2>' +
-        '      <div class="layui-form-item">' +
+        '      <img src="../../static/geyao_logoimg.png" alt="" class="logo-img login_img">' +
+        '      <div class="layui-form-item login_layer">' +
         '        <label class="layui-form-label">登录名：</label>' +
         '        <div class="layui-input-inline">' +
         '          <input type="text" placeholder="请输入登录名" class="layui-input" id="usename">' +
@@ -140,61 +127,30 @@ export default {
       this.$router.push({path: 'firstPage'})
     },
     articleDetail (blogid) {
-      this.$router.push({path: 'articleDetail', query: {blogid:blogid}})
+      this.$router.push({path: 'articleDetail', query: {blogid: blogid}})
     },
     queryWebsiteUpdateInfo () {
       this.$router.push({path: 'websiteUpdateinfo'})
+    },
+    goMessage () {
+      this.$router.push({path: 'leaveMessage'})
     }
   },
   created: function () {
     this.$http.post('/findAllBlogs.do', {}
     ).then(result => {
-      console.info(typeof result)
+      console.info(result)
       this.itemList = result.dataList
     })
+
+    layui.config({
+      base: '../../static/'
+    }).use('blog')
   }
 }
-$(document).ready(function () {
-  $('.left-content').css('min-height', $(window).height())
-})
+
 </script>
 <style>
-  .layui-elem-quote{
-    background-color: #ffffff;
-  }
-  .layui-logo{
-    color:#fff!important;
-  }
-  .layui-body{
-    left: 0px;
-    background-image:url(../../static/bg.jpg)!important;
-  }
-  .layui-elem-quote{
-    margin-top: 7px;
-  }
-  .content{
-    margin-left:10px;
-    margin-right: 10px;
-    /*height: 100%;*/
-  }
-  .left-content{
-    display: inline-block;
-    width: 70%;
-  }
-  .right-content{
-    display: inline-block;
-    float: right;
-    padding: 5px;
-    width: 29%;
-  }
-  .login h2{
-    margin-top: 30px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  .time-line{
-    margin: 34px;
-  }
   .timeline_content{
     font-size: 15px;
     color: #000000;
@@ -202,29 +158,22 @@ $(document).ready(function () {
     /* autoprefixer: off */
     -webkit-box-orient: vertical;
     /* autoprefixer: on */
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 8;
     overflow: hidden;
   }
-  .layui-card-header{
-    padding-top: 5px;
-    height:65px;
-    font-size: 20px;
-  }
-  .second{
-    font-size: 14px;
-    font-weight: 100;
-    margin-top: -15px;
-  }
-  .go_ready{
-    color: #ea3f40;
-    width: 100%;
-    text-align: right;
+  .logo-img{
     display: block;
-    line-height: 40px;
+    margin-top: 8px;
   }
-  .small_chunk{
-    background: #ffffff;
-    padding: 10px;
-    margin-bottom: 20px;
+  .layui-icon-username{
+    display: block;
+  }
+  .login_layer{
+    margin-top: 30px;
+  }
+  .login_img{
+    margin-top: 30px;
+    width: 240px;
+    margin-left: 52px;
   }
 </style>
