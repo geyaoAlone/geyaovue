@@ -2,8 +2,8 @@
 
 import axios from 'axios'
 import { Indicator } from 'mint-ui'
-const BASE_URL = 'http://120.79.240.9:9999/'// 'http://localhost:9999'
-
+const BASE_URL = 'http://120.79.240.9:9999/'
+//'http://10.10.10.125:9999/'
 axios.interceptors.request.use(config => {
   // loading opend
   Indicator.open('加载中...')
@@ -41,7 +41,7 @@ export default {
       baseURL: BASE_URL,
       url,
       data,
-      timeout: 10000
+      timeout: 15000
     }).then(response => checkStatus(response))
   },
   BASE_URL

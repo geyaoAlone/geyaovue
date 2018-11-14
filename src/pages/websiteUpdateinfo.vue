@@ -42,7 +42,7 @@
                 <div class="layui-timeline-content layui-text">
                   <h3 class="layui-timeline-title" >{{item.title}}</h3>
                   <p>
-                    <span>{{item.time}}</span>
+                    <span>{{item.time}}</span><br/>
                     <span class="timeline_content" v-html="item.content"></span>
                   </p>
                 </div>
@@ -136,8 +136,8 @@ export default {
   created: function () {
     this.$http.post('/findAllTimeline.do', {}
     ).then(result => {
-      console.info(typeof result)
-      this.itemList = result
+      console.info(result)
+      this.itemList = result.dataList
     })
   }
 
@@ -145,18 +145,13 @@ export default {
 </script>
 
 <style scoped>
-  .layui-logo{
-    color:#fff!important;
-  }
   .time_line{
     background: #fff;
     padding: 25px;
     margin-top: 15px;
   }
-  .detail_title{
-    text-align: center;
-    display: block;
-    font-size: 23px;
-    font-weight: 500;
+  .timeline_content{
+    font-size: 15px;
+    color: #000000;
   }
 </style>

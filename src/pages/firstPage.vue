@@ -14,7 +14,7 @@
           <li class="layui-nav-item"><a href="javascript:;" @click="goMessage()">留言</a></li>
           <li class="layui-nav-item"><a href="javascript:;" @click="queryWebsiteUpdateInfo()">关于小站</a></li>
         </ul>
-        <a href="javascript:;" class="personal pull-left" @click="login()">
+        <a href="javascript:;" class="personal pull-left" @click="login()" id="login">
           <i class="layui-icon layui-icon-username"></i>
         </a>
       </div>
@@ -37,12 +37,19 @@
           <p><i class="layui-icon layui-icon-speaker"></i>公告：<span>欢迎来到葛耀的小站</span></p>
         </h4>
         <div class="item" v-for="(item ,i) in itemList" :key="i">
-          <div class="item-box  layer-photos-demo1 layer-photos-demo">
+          <div class="item-box ql-snow">
             <h3><a href="javascript:;" @click="articleDetail(item.blogid)">{{item.title}}</a></h3>
-            <h5>{{item.author}}&emsp;发布于：<span>{{item.time}}</span></h5>
-            <p class="timeline_content" v-html="item.content"></p>
+            <h5>
+              <span class="blog_type" v-for="type in typeList" v-if="type.typeName == item.blogtype" v-bind:style="{backgroundColor:type.typeTheme}">
+                {{item.blogtype}}
+              </span>
+              {{item.author}}&emsp;发布于：<span>{{item.time}}</span>
+            </h5>
+            <div class="timeline_content ql-editor" v-html="item.content">
+
+            </div>
             <!--<img src="../res/static/images/item.png" alt="">-->
-            <a style="float: right;color: #ea3f40" @click="articleDetail(item.blogid)">阅读全文➠</a>
+            <a style="float:right;color: #ea3f40;margin-right:15px;" @click="articleDetail(item.blogid)">阅读全文➠</a>
           </div>
           <!--
           <div class="comment count">
@@ -70,7 +77,8 @@ export default {
   name: '我的首页',
   data: function () {
     return {
-      itemList: []
+      itemList: [],
+      typeList:[]
     }
   },
   // 这里写方法比如给元素绑定事件等等
@@ -82,7 +90,7 @@ export default {
         title: '',
         skin: 'layui-layer-rim',
         area: ['350px', '300px'],
-        content: '<div class="login layui-form" onkeydown="keyLogin();">' +
+        content: '<div class="login layui-form">' +
         '      <img src="../../static/geyao_logoimg.png" alt="" class="logo-img login_img">' +
         '      <div class="layui-form-item login_layer">' +
         '        <label class="layui-form-label">登录名：</label>' +
@@ -137,10 +145,26 @@ export default {
     }
   },
   created: function () {
+    var data = []
     this.$http.post('/findAllBlogs.do', {}
     ).then(result => {
       console.info(result)
-      this.itemList = result.dataList
+      data = result.dataList
+      this.typeList = result.blogTypeList
+
+      /*
+      if (data.length > 0) {
+        for (var i = 0; i < data.length; i++) {
+          var temp = data[i].content.replace(/\n/g, '_@').replace(/\r/g, '_#')
+          temp = temp.replace(/_#_@/g, '<br/>')// IE7-8
+          temp = temp.replace(/_@/g, '<br/>')// IE9、FF、chrome
+          temp = temp.replace(/\s/g, '&nbsp;')// 空格处理
+          console.info(temp)
+          data[i].content = temp
+        }
+      }
+      */
+      this.itemList = data
     })
 
     layui.config({
@@ -154,12 +178,19 @@ export default {
   .timeline_content{
     font-size: 15px;
     color: #000000;
-    display: -webkit-box;
+    /*display: -webkit-box;*/
     /* autoprefixer: off */
-    -webkit-box-orient: vertical;
+    /*-webkit-box-orient: vertical;*/
     /* autoprefixer: on */
-    -webkit-line-clamp: 8;
-    overflow: hidden;
+    /*-webkit-line-clamp: 8;*/
+    /*overflow: hidden;*/
+    /*display: block;*/
+    /* -webkit-margin-before: 1em;*/
+    /* -webkit-margin-after: 1em;*/
+    /* -webkit-margin-start: 0px;*/
+    /*-webkit-margin-end: 0px;*/
+    max-height: 400px;
+    padding-top: 0px;
   }
   .logo-img{
     display: block;
@@ -175,5 +206,14 @@ export default {
     margin-top: 30px;
     width: 240px;
     margin-left: 52px;
+  }
+  .item-box h5 .blog_type{
+    margin-right: 31px;
+    color: #fff;
+    background-color:#1e9fff;
+    padding: 1px 10px;
+    font-size: 13px;
+    /*box-shadow: 0 0 7px rgba(0,0,0,0.3);*/
+    border-radius: 2px;
   }
 </style>

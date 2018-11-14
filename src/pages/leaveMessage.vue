@@ -45,7 +45,7 @@
             </fieldset>
             <div class="info-box msg_box">
               <div class="info-item msg_box_one" v-for="(item ,i) in itemList" :key="i">
-                <img class="info-img" src="../../static/info-img.png" alt="">
+                <img class="info-img" src="http://39.108.221.60/tx_5.jpg" alt="">
                 <div class="info-text msg_box_two">
                   <p class="title count">
                     <span class="name">{{item.author}}</span>

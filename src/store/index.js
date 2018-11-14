@@ -1,46 +1,44 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import util from  '@/utils';
-Vue.use(Vuex);
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
 
 const store = new Vuex.Store({
-    state: {
-        session:null,
-        openID:null
+  state: {
+    session: null,
+    openID: null
+  },
+  mutations: {
+    setSession (state, user) {
+      sessionStorage.setItem('user', JSON.stringify(user))
+      state.session = user
     },
-    mutations: {
-        setSession(state,user){
-            sessionStorage.setItem( 'user' ,JSON.stringify(user));
-            state.session = user;
-        },
-        setOpenID(state,openID){
-            sessionStorage.openID  = openID;
-            state.openID  = openID;
-        },
-        clearSession(state) {
-            sessionStorage.removeItem( 'user');
-            state.session = null;
-        }
-
+    setOpenID (state, openID) {
+      sessionStorage.openID = openID
+      state.openID = openID
     },
-    actions: {
-
-    },
-    modules: {
+    clearSession (state) {
+      sessionStorage.removeItem('user')
+      state.session = null
     }
+
+  },
+  actions: {
+
+  },
+  modules: {
+  }
 });
 
-(function(){
+(function () {
+  if (sessionStorage.user) {
+    store.commit('setSession', JSON.parse(sessionStorage.user))
+  }
+  let openID = sessionStorage.openID //|| util.getRequest('weChatOpenId') || util.getRequest('aliPayOpenId')
+  if (openID) {
+    store.commit('setOpenID', openID)
+  }
 
-    if(sessionStorage.user) {
-        store.commit('setSession', JSON.parse(sessionStorage.user));
-    }
-    let openID =  sessionStorage.openID || util.getRequest('weChatOpenId') || util.getRequest('aliPayOpenId');
-    if(openID) {
-        store.commit('setOpenID', openID);
-    }
+  console.info('sessionStorage', sessionStorage)
+})()
 
-    console.info('sessionStorage',sessionStorage)
-})();
-
-export default store;
+export default store

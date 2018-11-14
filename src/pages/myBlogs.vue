@@ -1,14 +1,16 @@
 <template>
   <div class="layui-layout layui-layout-admin">
     <div class="layui-header layui-bg-green">
-      <div class="layui-logo">欢迎您，{{userInfo.nickname}}</div>
+      <div class="layui-logo">
+        <!--<img src="../../static/geyao_logoNew1.png" alt="" class="logo-img">-->
+        欢迎您，{{userInfo.nickname}}</div>
       <!-- 头部区域（可配合layui已有的水平导航） -->
       <ul class="layui-nav layui-bg-green layui-layout-left">
         <li class="layui-nav-item layui-this">
           <a href="javascript:;" @click="thisPage(userInfo.usename)">我的博客</a>
         </li>
         <li class="layui-nav-item" v-if="userInfo.usetype =='0'">
-          <a href="javascript:;" @click="updateWebInfo()">更新日志</a>
+          <a href="javascript:;" @click="updateWebInfo(userInfo.usename)">更新日志</a>
         </li>
       </ul>
       <ul class="layui-nav layui-layout-right">
@@ -17,18 +19,40 @@
     </div>
 
     <div class="layui-body">
-      <button class="layui-btn layui-btn-normal add" @click="save()">
-        <i class="layui-icon">&#xe608;</i> 添加
+      <button class="layui-btn layui-btn-lg layui-btn-normal add" @click="save()">
+        <i class="layui-icon">&#xe642;</i>写博客
       </button>
       <div class="content">
+        <fieldset class="layui-elem-field ">
+          <legend>我的博客</legend>
+          <div class="layui-field-box">
+            <div class="layui-container">
+              <div class="layui-row">
+                <div class="layui-col-xs4 layui-col-sm6 layui-col-md4 blog_chunk" v-for="(item ,i) in itemList" :key="i" v-bind:style="{borderColor:item.blogTheme}">
+                  <span class="blog_type" v-bind:style="{backgroundColor:item.blogTheme}">{{item.blogtype}}</span>
+                  <span v-if="!item.ispublic"><i class="layui-icon">&#xe67a;</i>私密的哦<i class="layui-icon">&#xe67a;</i></span>
+                  <h3>{{item.title}}</h3>
+                  <div class="blog_content ql-snow" >
+                    <span v-html="item.content" class="ql-editor"></span>
+                  </div>
+                  <div class="comment count">
+                    <a href="javascript:;" @click="editThisBlog(item.blogid)"> <i class="layui-icon">&#xe642;</i>修改</a>
+                    <a href="javascript:;" @click="deleteThisBlog(item.blogid)"> <i class="layui-icon">&#xe640;</i>删除</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
 
+        <!--
         <table class="layui-hide" id="timeline" lay-filter="test"></table>
 
         <script type="text/html" id="barDemo">
           <a class="layui-btn layui-btn-xs" lay-event="edit" onclick="delBlog()">编辑</a>
           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
-
+        -->
       </div>
     </div>
     <div class="layui-footer" style="left:0px;">
@@ -44,8 +68,7 @@ export default {
   data () {
     return {
       userInfo: {},
-      itemList: [],
-      table: {}
+      itemList: []
     }
   },
   // 这里写方法比如给元素绑定事件等等
@@ -72,7 +95,9 @@ export default {
         // area: ['800px', '350px'] //自定义文本域宽高
       }, function (value, index) {
         if (value === passwd) {
-          layer.open({
+          _this.$router.push({path: 'createNewBlog', query: {usename: usename}})
+          /*
+          var saveOpen = layer.open({
             type: 1,
             skin: 'layui-layer-rim',
             area: ['800px', '500px'],
@@ -87,18 +112,22 @@ export default {
                 layer.msg('参数为空！')
                 return
               }
-              var content = params.content.replace(/\n/g, '_@').replace(/\r/g, '_#')
-              content = content.replace(/_#_@/g, '<br/>')// IE7-8
-              content = content.replace(/_@/g, '<br/>')// IE9、FF、chrome
-              content = content.replace(/\s/g, '&nbsp;')// 空格处理
-              params.content = content
               _this.$http.post('/saveBlogs.do', params
               ).then(result => {
-                layer.msg(result, {time: 1000})
-                location.reload([true])
+                if (!result) {
+                  layer.msg('保存异常！')
+                } else if (result.result != '1') {
+                  layer.msg(result.failReason)
+                } else {
+                  layer.msg('保存成功！', {time: 1000}, function () {
+                    layer.close(saveOpen)
+                    _this.itemList = result.dataList
+                  })
+                }
               })
             }
           })
+          */
         } else {
           layer.msg('密码错误')
         }
@@ -108,14 +137,26 @@ export default {
     thisPage (usename) {
       this.$router.push({path: 'myBlogs', query: {usename: usename}})
     },
-    updateWebInfo: function () {
-      this.$router.push({path: 'myBlogs'})
+    updateWebInfo: function (usename) {
+      this.$router.push({path: 'updateWebInfo', query: {usename: usename}})
     },
-    updateBlog (blogid) {
-      this.$router.push({path: 'editBlogs', query: {blogid: blogid, usename: this.userInfo.usename}})
+    editThisBlog (blogid) {
+      this.$router.push({path: 'editBlog', query: {blogid: blogid, usename: this.userInfo.usename}})
     },
-    delBlog () {
-      alert('开发中。。。')
+    deleteThisBlog (blogid) {
+      let _this = this
+      layer.confirm('确定要删除这条博客吗?', {icon: 3, title: '提示'}, function (index) {
+        _this.$http.post('/deleteBlog.do', {blogid: blogid, usename: _this.userInfo.usename}
+        ).then(result => {
+          if (result.result === '1') {
+            layer.msg('删除成功！', {time: 1000}, function () {
+              _this.itemList = result.blogList
+            })
+          } else {
+            layer.msg('删除失败：' + result.failReason, {time: 1500})
+          }
+        })
+      })
     }
   },
   created () {
@@ -127,6 +168,7 @@ export default {
       })
     }
     let _this = this
+    var data = []
     this.$http.post('/findAllBlogs.do', {usename: author}
     ).then(result => {
       console.info(result)
@@ -135,24 +177,20 @@ export default {
           _this.$router.push({path: 'firstPage'})
         })
       }
-      _this.itemList = result.dataList
-      _this.userInfo = result.user
+      var typeList = result.blogTypeList
+      data = result.dataList
 
-      layui.use('table', function () {
-        var table = layui.table
-        this.table = table
-        table.render({
-          elem: '#timeline',
-          data: result.dataList,
-          cellMinWidth: 150, // 全局定义常规单元格的最小宽度，layui 2.2.1 新增
-          cols: [[
-            {field: 'time', width: '15%', title: '时间', sort: true},
-            {field: 'title', width: '20%', title: '标题', sort: true},
-            {field: 'content', width: '55%', title: '内容', sort: true},
-            {width: '10%', title: '操作', sort: false, toolbar: '#barDemo'}
-          ]]
-        })
-      })
+      if (data.length > 0 && typeList.length > 0) {
+        for (var i = 0; i < data.length; i++) {
+          for (var j = 0; j < typeList.length; j++) {
+            if (data[i].blogtype === typeList[j].typeName) {
+              data[i].blogTheme = typeList[j].typeTheme
+            }
+          }
+        }
+      }
+      _this.itemList = data
+      _this.userInfo = result.user
     })
   }
 
@@ -172,15 +210,16 @@ this.table.on('toolbar(test)', function (obj) {
   };
 })
 */
-console.log(this.table)
 </script>
 
 <style>
+  .layui-container{
+    width: 100%;
+  }
   .layui-logo{
     color:#fff!important;
   }
   .layui-body{
-    background-color: #ffffff;
     left: 0px;
   }
   .content{
@@ -210,5 +249,48 @@ console.log(this.table)
   .add{
     float: right;
     margin: 20px 30px 10px;
+  }
+  .blog_chunk{
+    background: #fff;
+    margin: 10px;
+    width: 637px;
+    height: 500px;
+    border: 1px solid #419488;
+    border-radius: 5px;
+  }
+  .blog_chunk h3{
+    font-size: 20px;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .blog_content{
+    height: 340px;
+
+  }
+  .blog_content span{
+    font-size: 14px;
+    display: -webkit-box;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    -webkit-line-clamp: 12;
+    overflow: hidden;
+    margin: 0px 7px 10px 7px;
+    padding: 0px 20px 0px 20px;
+
+  }
+  .blog_chunk .blog_type{
+    margin-right: 25px;
+    padding: 2px 6px 2px 6px;
+    background-color: #419488;
+    color: #fff;
+    border-top-left-radius:5px;
+    border-bottom-right-radius: 2px;
+
+  }
+  .blog_chunk span:nth-child(2){
+    color: #ea3f40;
   }
 </style>

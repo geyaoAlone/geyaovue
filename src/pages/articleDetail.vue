@@ -52,10 +52,10 @@
       <div class="container container-message container-details">
         <div class="contar-wrap">
           <div class="item">
-            <div class="item-box  layer-photos-demo1 layer-photos-demo">
+            <div class="item-box ql-snow">
               <h3><a href="details.html">{{detailInfo.title}}</a></h3>
-              <h5>{{detailInfo.author}}&emsp;发布于：<span>{{detailInfo.time}}</span></h5>
-              <p v-html="detailInfo.content"></p>
+              <h5><span class="blog_type" v-bind:style="{backgroundColor:blogTheme}">{{detailInfo.blogtype}}</span>{{detailInfo.author}}&emsp;发布于：<span>{{detailInfo.time}}</span></h5>
+              <p class="ql-editor" v-html="detailInfo.content"></p>
               <!--<img src="../res/static/images/item.png" alt="">
               <div class="count layui-clear">
                 <span class="pull-left">阅读 <em>100000+</em></span>
@@ -71,7 +71,7 @@
             </fieldset>
             <div class="info-box msg_box">
               <div class="info-item msg_box_one" v-for="(item ,i) in comments" :key="i">
-                <img class="info-img" src="../../static/info-img.png" alt="">
+                <img class="info-img" src="http://39.108.221.60/tx_5.jpg" alt="">
                 <div class="info-text msg_box_two">
                   <p class="title count">
                     <span class="name">{{item.author}}</span>
@@ -103,7 +103,9 @@ export default {
   data: function () {
     return {
       detailInfo: {},
-      comments: []
+      comments: [],
+      blogTheme: '#1e9fff',
+      s: ''
     }
   },
   methods: {
@@ -214,8 +216,23 @@ export default {
     ).then(result => {
       console.info(result)
       this.detailInfo = result.blog
+      let blogTheme = result.type.typeTheme
+
+      if (blogTheme) {
+        this.blogTheme = blogTheme
+        console.info(this.blogTheme)
+      }
+
+      /*
+      var content = this.detailInfo.content.replace(/\n/g, '_@').replace(/\r/g, '_#')
+      content = content.replace(/_#_@/g, '<br/>')// IE7-8
+      content = content.replace(/_@/g, '<br/>')// IE9、FF、chrome
+      content = content.replace(/\s/g, '&nbsp;')// 空格处理
+      this.detailInfo.content = content
+      */
       this.comments = result.comments
     })
+    this.s = Math.floor(Math.random() * 4)
   }
 }
 </script>
@@ -273,6 +290,15 @@ export default {
     display: block;
     line-height: 38px;
     color: #787878;
+  }
+  .item-box h5 .blog_type{
+    margin-right: 31px;
+    color: #fff;
+    background-color:#1e9fff;
+    padding: 1px 10px;
+    font-size: 13px;
+    box-shadow: 0 0 7px rgba(0,0,0,0.3);
+    border-radius: 2px;
   }
 
 </style>

@@ -54,7 +54,7 @@ body{
 	background: #1e9fff;
   position: fixed;
   width: 100%;
-  z-index:19920923;
+  z-index:23;
 }
 .lay-blog .logo-img{
 	height:65px;
@@ -209,6 +209,11 @@ body{
 .lay-blog .container .item .comment a+a{border-left:1px solid #efefef;margin-left:-1px;}
 .lay-blog .container .item-btn{text-align:center;margin-top:20px;}
 
+.layui-row .comment{width: 100%; line-height: 56px; background: #f9f9f9; font-size: 14px; overflow:hidden;}
+.layui-row .comment a{display:inline-block;width:50%;text-align:center;float: left;}
+.layui-row .comment a+a{border-left:1px solid #efefef;margin-left:-1px;}
+
+
 
 @media only screen and (max-width:  750px) {
 	.lay-blog .container{width:100%; margin: 0 auto 70px;}
@@ -312,3 +317,44 @@ body{
     cursor: pointer;
 }
 /*end comment*/
+.quill-editor{
+  background: #fff;
+  min-height: 463px !important;
+  overflow: hidden;
+}
+.ql-container.ql-snow{
+  min-height: 505px !important;
+  border: 0px;
+  padding-top: 63px;
+}
+.ql-toolbar{
+  background: #f6f0e0;
+  position: fixed;
+  width: 896px;
+  opacity: 1;
+  z-index: 1;
+}
+.ql-snow .ql-editor pre.ql-syntax{
+  background-color: #f0f0f0!important;
+  color:#2c3e50!important;
+}
+div .ql-tooltip{
+  left:200px!important;
+}
+.avatar-uploader{
+  display: none;
+}
+.ql-editor p img{
+  width: 300px!important;
+  display: block;
+  margin: 0 auto;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+.ql-container .ql-editor{
+  min-height: 442px;
+}
+::selection{
+  background-color: #1e9fff;
+  color: #FFFFFF;
+}
